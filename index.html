@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<title>听打 - 达威工作室</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="css/font-awesome.css">
+	<link rel="prefetch" type="application/l10n" href="data.ini" />
+	<script type="text/javascript" src="js/l10n.js"></script>
+</head>
+
+<body>
+
+<div class="topbar inputting">
+	<div class="title active">听打</div>
+	<div class="controls">
+		<div class="button play-pause">
+			<i class="fa fa-play"></i>
+			<i class="fa fa-pause"></i>
+		</div>
+		<div class="button skip-backwards">
+			<i class="fa fa-backward"></i>
+		</div>
+		<div class="button skip-forwards">
+			<i class="fa fa-forward"></i>
+		</div>
+		<div class="button speed">
+			<i class="fa fa-dashboard"></i>
+			<span data-l10n-id="speed">速度</span>
+			<div class="speed-box">
+				F3 <i class="slider-origin"></i><input id="slider3" type="range" min="0.5" max="2.0" step="0.25" value="1" /> F4
+			</div>
+		</div>
+		<div id="player-hook"></div>
+		<div id="player-time"></div>
+		<div class="button reset">
+			<i class="fa fa-refresh"></i>
+		</div>
+	</div>
+	<a href="help" target="_blank" data-l10n-id="help" class="help-title">帮助</a>
+	<div target="_blank" class="language-title">
+		<i class="fa fa-globe"></i> <span id="curr-lang"></span>
+	</div>
+</div>
+<div class="language-picker">
+	<div class="container">
+		<div class="language-button" data-language="en">English</div>
+		<div class="language-button" data-language="zh-hans">简体中文</div>
+	</div>
+</div>            
+<div class="about active">
+	<div class="container">
+		<h1>
+			听打 <span style="font-size: 0.5em;vertical-align: top;text-transform: uppercase;color: #AAA; width: 0; display: inline-block;">beta</span>
+		</h1>
+		<p class="lead" data-l10n-id="lead">
+			听打 － 一个将录音或视频转录为文字的免费应用
+		</p>
+		<p class="lead">
+			觉得好用请为我投票，<a href="https://coding.net/event/html5/vote?page=1">HTML5 云端 Coding 体验大赛</a>，搜“tingda”投票
+		</p>
+		<div class="start">
+			<span class="start-loading" data-l10n-id="start-loading">加载中...</span>
+			<span class="start-ready" data-l10n-id="start-ready">开始听打</span>
+		</div>
+		<div id="old-browser"></div>
+		<div class="mobile" data-l10n-id="mobile-warning">听打应用只支持电脑操作！</div>
+		<ul>
+			<li data-l10n-id="promo-1">
+				播放器和编辑器之间<strong>不用切换</strong>
+			</li>
+			<li data-l10n-id="promo-2">
+				手不离开键盘就能<strong>暂停、后退和快进</strong>
+			</li>
+			<li data-l10n-id="promo-3">
+				用<strong>时间导航</strong>您的抄本
+			</li>
+			<li data-l10n-id="promo-4">
+				每秒<strong>自动保存</strong>到本地浏览器
+			</li>
+			<li data-l10n-id="promo-5">
+				<strong>隐私保护</strong>您的音频和抄本不会离开您的电脑
+			</li>
+			<li data-l10n-id="promo-6">
+				您可以<strong>导出</strong>为Markdown和普通文本。
+			</li>
+			<li data-l10n-id="promo-7">
+				支持<strong>视频同步播放</strong>
+			</li>
+			<li data-l10n-id="promo-8">
+				基于 MIT 许可证的<strong><a href="https://github.com/otranscribe/otranscribe">开源项目</a></strong>
+			</li>
+		</ul>
+		<!-- <div class="press">
+			<p data-l10n-id="press">合作</p>
+		</div> -->
+	</div>
+	<div class="credits">
+		<p>
+			<span>
+				<span data-l10n-id="credit">作者：</span>
+				<a href="http://twitter.com/elliot_bentley" target="_blank">Elliot Bentley</a>，
+				<span data-l10n-id="credit2">修改：</span>
+				<a href="http://weibo.com/wanghaida" target="_blank">Haida Wang</a>。
+			</span>
+		</p>
+	</div>
+</div>
+
+<div class="textbox-container">
+	<div class="input active">
+		<div class="file-input-wrapper">
+			<button class="btn-file-input">
+				<i class="fa fa-arrow-circle-o-up"></i>
+				<span data-l10n-id="choose-file">选择音（视）频文件</span>
+			</button>
+			<input id="attach" type="file" name="file" accept="audio/*, video/*"  />
+		</div>
+		<!-- <div class="yt-input" data-l10n-id="choose-youtube">or YouTube video</div>
+		<div class="ext-input-field">
+			<div class="close-ext-input"><i class="fa fa-times"></i></div>
+			<label data-l10n-id="youtube-instrux">输入YouTube视频地址：
+				<input type="text">
+			</label>
+			<div class="ext-input-warning"></div>
+		</div> -->
+		<div id="lastfile"></div>
+		<div id="formats"></div>
+	</div>
+	<div class="message-panel hidden">
+		<div class="close-message-panel"><i class="fa fa-times"></i></div>
+		<div class="message-content"></div>
+	</div>
+	<div id="textbox" class="mousetrap" contenteditable="true">
+		<p data-l10n-id="d-txt1">将你的文字输入在这里...</p>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p data-l10n-id="d-txt2">小提示：</p>
+		<p>&nbsp;</p>
+		<p data-l10n-id="d-txt3">- <em>Ctrl+I</em> 添加 <em>斜体</em> 格式， <b>Ctrl+B</b> 添加 <b>粗体</b> 格式</p>
+		<p data-l10n-id="d-txt4">- 按 ESC 来暂停和播放， 按 Ctrl+J 插入当前时间戳<p>
+	</div>
+	<div class="text-panel">
+		<button class="sbutton bold" onclick="document.execCommand('bold',false,null);">
+			<i class="fa fa-bold" id="icon-b"></i><span class="label">ctrl+b</span>
+		</button>
+		<button class="sbutton italic" onclick="document.execCommand('italic',false,null);">
+			<i class="fa fa-italic" id="icon-i"></i><span class="label">ctrl+i</span>
+		</button>
+		<button class="sbutton time" onclick="oT.timestamp.insert();">
+			<i class="fa fa-clock-o"></i><span class="label">ctrl+j</span>
+		</button>
+		<div class="wordcount">
+			<span id="wc"></span>    
+			<span class="wc-text" data-l10n-id="wordcount">字</span>        
+		</div>
+		<button class="sbutton backup">
+			<i class="fa fa-history"></i><span class="label" data-l10n-id="history-button">历史</span>
+		</button>
+		<div class="import-file-wrapper">
+			<button class="sbutton import">
+				<i class="fa fa-sign-in" id="icon-imp"></i><span class="label" data-l10n-id="import-button">导入</span>
+			</button>
+			<input id="local-file-import" type="file" name="file" accept=".otr"  />
+		</div>
+		<button class="sbutton export">
+			<i class="fa fa-share-square-o" id="icon-exp"></i><span class="label" data-l10n-id="export">导出</span>
+		</button>
+	</div>
+	<div class="export-panel">
+		<div class="export-title" data-l10n-id="export-download">下载文件格式为...</div>
+		<a class="export-block-md" id="x-md" target="_blank"  data-l10n-id="export-markdown">Markdown (.md)</a>
+		<a class="export-block-txt" id="x-txt" target="_blank" data-l10n-id="export-text">文本格式 (.txt)</a>
+		<a class="export-block-txt" id="x-otr" target="_blank" data-l10n-id="export-otr">听打格式 (.otr)</a>
+		<!-- <div class="export-title" data-l10n-id="export-send">发送抄本到...</div>
+		<a class="export-block-gd unauth" id="x-gd" target="_blank" href="javascript:void(0);">
+			Google Drive
+			<div class="sign-in" data-l10n-id="sign-in" id="x-gd-sign">登录</div>
+		</a> -->
+	</div>
+	<div class="backup-panel">
+		<div class="backup-description">
+			<div class="backup-close"><i class="fa fa-times"></i></div>
+			<div class="backup-title" data-l10n-id="history-title">抄本历史</div>
+			<div class="backup-instructions" data-l10n-id="history-instrux">每五分钟保存一次，备份不会存储很长时间，按CTRL+S随时保存。</div>
+		</div>
+		<div class="backup-window"><!-- backup blocks go here --></div>
+	</div>
+</div>
+
+<script src="js/mousetrap.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/progressor.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/audio.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="script.js"></script>
+</body>
+</html>
